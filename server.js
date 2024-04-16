@@ -1,4 +1,5 @@
 // Need dependencies
+const pg = require('pg');
 const inquirer = require('inquirer');
 
 
@@ -51,10 +52,12 @@ function mainPrompt() {
         }) 
 }
 
-// TO DO: Function to view employees
+// Function to view employees
 function viewEmployee() {
     // Beginning of list
     console.log('List of Employees');
+
+    // TO DO: Add code to display table for current emplyees
 
     // End of list
     console.log('All Employees Viewed.');
@@ -72,33 +75,67 @@ function viewDepartment() {
             message: 'What Department would you like to view',
             // Placeholder
             // Need to link this to data going into mySQL
+            // TO DO: Add code to show all current roles as choices
             choices: ['Sales', 'Legal', 'HR']
+
+            // TO DO: Add code to show 
         })
 }
-// TO DO: Function to add employees to table
+// Function to add employees to table
 function addEmployee() {
-    console.log('Enter Employee name');
+    // Use inquirer prompt to get info from user regarding new employee
+    inquirer
+        .prompt(
+        {
+            type: 'input',
+            name: 'Name',
+            message: 'Enter Employee name',
+        },
+        {
+            type: 'input',
+            name: 'Role',
+            message: "Enter Employee's new Role",
+        },
+    )
+    .then()
+
+    console.log('Successfuly added employee!')
 
     // Returns user to Main Menu
     mainPrompt();
 }
 
-// TO DO: Function to remove employees from table
+// Function to remove employees from table
 function removeEmployee() {
     console.log('Choose Employee to remove');
 
     // Return user to main menu
     mainPrompt();
 }
-// TO DO: function to Update an employees role
+// function to Update an employees role
 function updateEmployeeRole() {
     console.log('Chose employee role to update');
     // Return user to main menu
     mainPrompt();
 }
-// TO DO: function to add a Role
+// function to add a Role
 function addRole() {
     console.log('Enter new role.')
+
+    // TO DO: 
+    inquirer
+        .prompt([
+            {
+                type: 'input',
+                name: 'newRole',
+                message: 'What is the new role?',
+            },
+            {
+                type: 'input',
+                name: 'newRoleSalary',
+                message: 'What is the salary for this new role',
+            },
+        ])
 
     // Return user to main menu
     mainPrompt();
