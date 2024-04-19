@@ -1,9 +1,10 @@
 // Need dependencies
+const express = require('express');
 const inquirer = require('inquirer');
-const db = require('./db/database')
+const db = require('./db/database');
 
-connection.connect(function (err) {
-    if (err) throw err;
+async function main() {
+    await db.connect();
     console.log(`
     ╔═══╗─────╔╗──────────────╔═╗╔═╗
     ║╔══╝─────║║──────────────║║╚╝║║
@@ -13,11 +14,10 @@ connection.connect(function (err) {
     ╚═══╩╩╩╣╔═╩═╩══╩═╗╔╩══╩══╝╚╝╚╝╚╩╝╚╩╝╚╩╝╚╩═╗╠══╩╝
     ───────║║──────╔═╝║─────────────────────╔═╝║
     ───────╚╝──────╚══╝─────────────────────╚══╝`)
-
-    // Runs the main menu application
+    
     mainPrompt();
-});
- 
+}
+
 // functions to prompts user about actions (Main menu)
 function mainPrompt() {
 
@@ -41,7 +41,7 @@ function mainPrompt() {
                 break;
                 
                 // VIEW DEPARTMENTS => VIEW EMPLOYEES IN DEPARTMENT
-                case 'View Employees by Department': viewDepartment();
+                case 'View Employees by Department': getDept();
                 break;
 
                 // ADD EMPLOYEE
@@ -61,26 +61,41 @@ function mainPrompt() {
                 break;
 
                 // EXIT
+                case 'Exit' : endApp();
+                break
             }
         }) 
 }
 
 // Function to view employees
-function viewEmployee() {
+async function viewEmployee() {
     // Beginning of list
     console.log('List of Employees');
 
     // TO DO: Add code to display table for current emplyees
+    var employee = await db.query(`SELECT * FROM employee;`);
+    employee.rows
 
+    for (let employee of employee.rows) { `
+    ${employee.id}  ${employee.first_name}  ${employee.last_name}    ${employee.role_id}    ${employee.manager_id}`;
+    };
+ 
     // End of list
-    console.log('All Employees Viewed.');
+    console.log('All Employees Viewed.', employee);
 
     // Returns user to Main Menu
     mainPrompt();
 }
 
 // TO DO: Function to View employees in specific departments
-function viewDepartment() {
+async function getDept() {
+    const data = await db.query(`SELECT * FROM department`)
+    console.log('Departments', rows.data);
+
+    viewDepartment(data);
+}
+
+function viewDepartment(data) {
     inquirer
         .prompt({
             type: 'list',
@@ -89,7 +104,7 @@ function viewDepartment() {
             // Placeholder
             // Need to link this to data going into mySQL
             // TO DO: Add code to show all current roles as choices
-            choices: ['Sales', 'Legal', 'HR']
+            choices: [rows.data.name]
 
             // TO DO: Add code to show 
         })
@@ -154,7 +169,9 @@ function addRole() {
     mainPrompt();
 }
 // TO DO: function to exit application
+function endApp() {
+    db.end();
+    console.log('Quitting App');
+}
 
-
-// function to start the inquirer
-mainPrompt();
+main();
